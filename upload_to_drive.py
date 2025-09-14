@@ -3,11 +3,11 @@ from pydrive2.drive import GoogleDrive
 from oauth2client.service_account import ServiceAccountCredentials
 import os
 
-# Save credentials from GitHub secret to file
+# Save credentials from GitHub secret
 with open("gdrive_key.json", "w") as f:
     f.write(os.environ["GDRIVE_KEY"])
 
-# Authenticate with service account
+# Authenticate
 gauth = GoogleAuth()
 gauth.credentials = ServiceAccountCredentials.from_json_keyfile_name(
     "gdrive_key.json",
@@ -15,15 +15,17 @@ gauth.credentials = ServiceAccountCredentials.from_json_keyfile_name(
 )
 drive = GoogleDrive(gauth)
 
-# Upload to specific folder
+# Set file and folder ID (Shared Drive folder)
 file_name = "yellowpages_hammer_unions.csv"
-folder_id = "1QyoY1rs9Mv1yHa9-XDXGPZ4VK8ETduY3"  # Replace with your actual folder ID
+folder_id = "1QyoY1rs9Mv1yHa9-XDXGPZ4VK8ETduY3"
 
+# Upload with shared drive support
 gfile = drive.CreateFile({
     "title": file_name,
-    "parents": [{"id": folder_id}]
+    "parents": [{"id": folder_id}],
+    "supportsAllDrives": True
 })
 gfile.SetContentFile(file_name)
-gfile.Upload()
+gfile.Upload(param={"supportsAllDrives": True})
 
-print(f"✅ Uploaded '{file_name}' to Google Drive folder {folder_id}")
+print(f"✅ Uploaded '{file_name}' to Shared Drive folder {folder_id}")
