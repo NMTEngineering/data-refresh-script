@@ -8,7 +8,7 @@ with open("gdrive_key.json", "w") as f:
 
 # Authenticate using pydrive2's LoadServiceConfigFile method
 gauth = GoogleAuth()
-gauth.LoadServiceConfigFile("gdrive_key.json")
+gauth.LoadClientConfigFile("gdrive_key.json")
 drive = GoogleDrive(gauth)
 
 file_name = "yellowpages_hammer_unions.csv"
