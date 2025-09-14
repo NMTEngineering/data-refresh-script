@@ -160,15 +160,4 @@ if data:
 else:
     print("⚠️ No data scraped. Please check scraping logic.")
 
-- name: Install Google dependencies
-  run: pip install gspread oauth2client pydrive2
-
-- name: Upload to Google Drive
-  run: |
-    echo "$GDRIVE_KEY" > gdrive_key.json
-    python upload_to_drive.py
-
-
 driver.quit()
-
-
