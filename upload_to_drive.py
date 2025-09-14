@@ -1,14 +1,17 @@
 from pydrive2.auth import GoogleAuth
 from pydrive2.drive import GoogleDrive
+from oauth2client.service_account import ServiceAccountCredentials
 import os
 
-# Save credentials from GitHub secret
+# Save service account credentials from secret
 with open("gdrive_key.json", "w") as f:
     f.write(os.environ["GDRIVE_KEY"])
 
-# Authenticate using pydrive2's LoadServiceConfigFile method
 gauth = GoogleAuth()
-gauth.LoadClientConfigFile("gdrive_key.json")
+scope = ['https://www.googleapis.com/auth/drive']
+gauth.credentials = ServiceAccountCredentials.from_json_keyfile_name("gdrive_key.json", scope)
+gauth.Authorize()
+
 drive = GoogleDrive(gauth)
 
 file_name = "yellowpages_hammer_unions.csv"
