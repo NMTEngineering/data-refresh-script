@@ -11,8 +11,14 @@ import csv
 
 # Setup Chrome driver
 options = Options()
-options.add_argument("--headless")  # Optional
+# options.add_argument("--headless")  # Optional
+# options.add_argument("--no-sandbox")
+options.add_argument("--headless=new")
 options.add_argument("--no-sandbox")
+options.add_argument("--disable-dev-shm-usage")
+options.add_argument("--disable-gpu")
+options.add_argument("--window-size=1920,1080")
+
 # options.add_argument("--disable-gpu")
 # options.add_argument("--window-size=1920,1080")
 
@@ -33,9 +39,11 @@ role_keywords = ["manufacturer", "supplier", "distributor", "dealer", "stockist"
 for page in range(1, 2):  # Update range for more pages
     print(f"🔁 Scraping page {page}...")
     driver.get(base_url.format(page))
+    print("🔍 Page title:", driver.title)
+    print(driver.page_source[:1000])  # First 1000 chars
 
     try:
-        WebDriverWait(driver, 15).until(
+        WebDriverWait(driver, 20).until(
             EC.presence_of_all_elements_located((By.CSS_SELECTOR, 'div.box'))
         )
         company_cards = driver.find_elements(By.CSS_SELECTOR, 'div.box')
@@ -161,3 +169,4 @@ else:
     print("⚠️ No data scraped. Please check scraping logic.")
 
 driver.quit()
+
