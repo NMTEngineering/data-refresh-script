@@ -31,16 +31,18 @@ jobs:
       - name: Run scraper
         run: python yellowpages_hammer_unions.py
 
-      - name: Setup rclone
+      # 🔹 Install rclone (this was missing)
+      - name: Install rclone
+        run: |
+          curl https://rclone.org/install.sh | sudo bash
+
+      - name: Setup rclone config
         run: |
           mkdir -p ~/.config/rclone
           echo "${{ secrets.RCLONE_CONF }}" > ~/.config/rclone/rclone.conf
 
       - name: Upload to OneDrive
-        run: |
-          rclone copy yellowpages_hammer_unions.csv onedrive:/PowerBI/ --progress
+        run: rclone copy yellowpages_hammer_unions.csv onedrive:/PowerBI/ --progress
 
       - name: List files in OneDrive
         run: rclone ls onedrive:/PowerBI
-        env:
-          RCLONE_CONFIG: ${{ secrets.RCLONE_CONF }}
