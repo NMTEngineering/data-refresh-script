@@ -2,7 +2,7 @@ name: run-script
 
 on:
   schedule:
-    - cron: '58 9 * * 0'  # Runs every Sunday at 4:30 AM UTC
+    - cron: '58 9 * * 0'  # Runs every Sunday at 9:58 UTC
   workflow_dispatch:
 
 jobs:
@@ -26,12 +26,16 @@ jobs:
           sudo apt install -y ./google-chrome-stable_current_amd64.deb
 
       - name: Install dependencies
-        run: pip install -r requirements.txt pydrive2
+        run: pip install -r requirements.txt
 
-      - name: Run script
+      - name: Run scraper
         run: python yellowpages_hammer_unions.py
 
-      - name: Upload to Google Drive
-        env:
-          GDRIVE_KEY: ${{ secrets.GDRIVE_KEY }}
-        run: python upload_to_drive.py
+      - name: Setup rclone
+        run: |
+          mkdir -p ~/.config/rclone
+          echo "${{ secrets.RCLONE_CONF }}" > ~/.config/rclone/rclone.conf
+
+      - name: Upload to OneDrive
+        run: |
+          rclone copy yellowpages_hammer_unions.csv onedrive:/PowerBI/ --progress
