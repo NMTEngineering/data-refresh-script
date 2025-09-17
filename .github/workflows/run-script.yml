@@ -41,6 +41,12 @@ jobs:
           mkdir -p ~/.config/rclone
           echo "${{ secrets.RCLONE_CONF }}" > ~/.config/rclone/rclone.conf
 
+      - name: Debug rclone config
+        run: |
+          echo "🔍 Checking rclone config..."
+          cat ~/.config/rclone/rclone.conf | sed 's/secret.*/secret=***MASKED***/g'
+          rclone listremotes
+
       - name: Upload to OneDrive
         run: rclone copy yellowpages_hammer_unions.csv onedrive:/PowerBI/ --progress
 
