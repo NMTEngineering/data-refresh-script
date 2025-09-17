@@ -39,7 +39,13 @@ jobs:
       - name: Setup rclone config
         run: |
           mkdir -p ~/.config/rclone
-          echo "${{ secrets.RCLONE_CONF }}" > ~/.config/rclone/rclone.conf
+          cat <<EOF > ~/.config/rclone/rclone.conf
+          [onedrive]
+          type = onedrive
+          token = ${{ secrets.ONEDRIVE_TOKEN }}
+          drive_id = 12876e83336b749f
+          drive_type = personal
+          EOF
 
       - name: Debug rclone config
         run: |
