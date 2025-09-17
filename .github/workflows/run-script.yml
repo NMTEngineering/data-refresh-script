@@ -31,26 +31,21 @@ jobs:
       - name: Run scraper
         run: python yellowpages_hammer_unions.py
 
-      # 🔹 Install rclone (this was missing)
+      # 🔹 Install rclone
       - name: Install rclone
         run: |
           curl https://rclone.org/install.sh | sudo bash
 
+      # 🔹 Setup rclone config from GitHub secret
       - name: Setup rclone config
         run: |
           mkdir -p ~/.config/rclone
-          cat <<EOF > ~/.config/rclone/rclone.conf
-          [onedrive]
-          type = onedrive
-          token = ${{ secrets.ONEDRIVE_TOKEN }}
-          drive_id = 12876e83336b749f
-          drive_type = personal
-          EOF
+          echo "${{ secrets.RCLONE_CONF }}" > ~/.config/rclone/rclone.conf
 
       - name: Debug rclone config
         run: |
           echo "🔍 Checking rclone config..."
-          cat ~/.config/rclone/rclone.conf | sed 's/secret.*/secret=***MASKED***/g'
+          cat ~/.config/rclone/rclone.conf | sed 's/access_token.*/access_token=***MASKED***/g'
           rclone listremotes
 
       - name: Upload to OneDrive
